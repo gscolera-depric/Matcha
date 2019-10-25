@@ -1,0 +1,130 @@
+@import "variables"
+
+*, *:before, *:after
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+
+h1, h2, h3, h4
+  gradient-text();
+  text-transform: uppercase;
+
+a
+  color: inherit;
+  text-decoration: none;
+
+:focus, :active, :hover
+  outline: none;
+
+html
+  color: dark;
+  font-family: primary-font;
+  font-size: 25px;
+  height: 100vh;
+  width: 100vw;
+  @media screen and (max-width: lg) {font-size: 18px};
+  @media screen and (max-width: md) {font-size: 16px};
+  @media screen and (max-width: sm) {font-size:	15px};
+  @media screen and (max-width: xs) {font-size:	14px};
+
+body
+  height: 100%;
+  width: 100%;
+
+section
+  background: bg-overlay;
+  padding: 1rem 2rem;
+
+button
+  background: bg-accent;
+  border: none;
+  color: light;
+  font-weight: bold;
+  padding: .5rem 2rem;
+  text-transform: uppercase;
+  transition: .3s;
+  width: 100%;
+  &:hover
+    cursor: pointer;
+  &:active
+    transform: scale(.95);
+
+form button
+  margin: 1rem 0;
+
+input
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid faded;
+  color: accent1;
+  font-size: 1.2rem;
+  padding: .5rem;
+  position: relative;
+  margin-top: 1rem;
+  width: 100%;
+  &:focus
+    border-bottom: 1px solid accent;
+
+.container
+  height: 100%;
+  width: 100%;
+
+.flex-container
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+.input
+  position: relative;
+  width: 25rem;
+  @media screen and (max-width: xs)
+    width: 90vw;
+  & label
+    gradient-text();
+    bottom: .1rem;
+    font-size: .8rem;
+    font-weight: bold;
+    left: .5rem;
+    pointer-events: none;
+    position: absolute;
+    transition: .3s;
+
+input:focus + label,
+input.filled + label
+  color: faded;
+  font-weight: normal;
+  transform: translateY(-2rem);
+
+.form-title
+  padding: .5rem;
+
+.form-body
+  margin-bottom: 1rem;
+
+.form-footer
+  color: faded;
+  font-family: accent-font;
+  font-size: 1.3rem;
+  & span
+    padding: 0 .5rem;
+  & a
+    gradient-text();
+    padding: 0 .2rem;
+
+.error
+  color: error;
+
+.success
+  gradient-text();
+  padding: .2rem;
+
+.input-error
+  position: absolute;
+  bottom: -1rem;
+  right: .5rem;
+
+.icon
+  height: 80%;
+  &:hover
+    cursor: pointer;
