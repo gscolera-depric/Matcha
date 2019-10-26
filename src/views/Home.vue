@@ -12,7 +12,7 @@ export default {
     AppHeader
   },
   mounted() {
-
+    this.$store.dispatch('applyUser');
   }
 }
 </script>

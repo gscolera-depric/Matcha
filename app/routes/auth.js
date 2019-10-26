@@ -173,7 +173,9 @@ function refreshTokens(req, res) {
 
     User.findOne({_id: decoded.id}).exec()
     .then(user => {
-      if (!user) return res.status(401).json({ reason: 'Invalid token'});
+      if (!user || user.token !== token)
+        return res.status(401).json({ reason: 'Invalid token'});
+
       createTokens(user)
       .then(tokens => res.json(tokens))
       .catch(() => res.status(500).send());

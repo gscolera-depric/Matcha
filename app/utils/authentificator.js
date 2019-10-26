@@ -5,6 +5,7 @@ const authentificator = (req, res, next) => {
 
   let token = req.headers.authorization.split(' ')[1];
 
+  console.log(token);
   if (!token)
     return res.status(401).send();
 
