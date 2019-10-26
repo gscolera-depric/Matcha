@@ -10,7 +10,12 @@ const userSchema = new mongoose.Schema({
   token: { type: String},
   activated: {type: Boolean, default: false},
   fameRating: { type: Number, default: 0 },
-  album: []
+  album: {type: Array },
+  location: {
+    country: String,
+    city: String,
+    coords: Array
+  }
 });
 
 userSchema.statics.findByLogin = function(login) {

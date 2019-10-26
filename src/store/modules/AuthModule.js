@@ -21,5 +21,5 @@ module.exports = {
       localStorage.removeItem('accessToken');
       localStorage.removeItem('refreshToken');
     }
-  }
+  },
 };

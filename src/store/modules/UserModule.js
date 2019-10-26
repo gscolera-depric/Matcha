@@ -6,25 +6,18 @@ const UserModule = {
     location: null
   },
   getters: {
-
+    user: state => state.user
   },
   mutations: {
     APPLY_USER: (state, user) => state.user = user
   },
   actions: {
     applyUser: ({ commit }) => {
-      getCurrentPosition()
-        .then(pos => axios.post('/api/home/apply-user', pos))
-        .then(res => console.log(res));
+      axios.post('/api/home/apply-user')
+        .then(user => commit('APPLY_USER', user.data));
     }
   }
 };
 
 export default UserModule;
 
-const getCurrentPosition = () => new Promise((resolve) => {
-  if (!("geolocation" in navigator)) resolve(null);
-  let options = { enableHighAccuracy: true };
-  navigator.geolocation.getCurrentPosition(pos => resolve([pos.coords.latitude, pos.coords.longitude]),
-                                            () => resolve(null), options);
-});

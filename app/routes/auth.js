@@ -3,6 +3,9 @@ const uuid = require('uuid');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const generator = require('generate-password');
+const geoip = require('geoip-lite');
+const geocoder = require('node-open-geocoder');
+const publicIp = require('public-ip');
 const User = require('../models/UserModel');
 const mailer = require('../utils/mailer');
 const { accessLifetime, refreshLifetime, secret } = require('../config');
@@ -34,9 +37,12 @@ function checkIfUnqiue(req, res) {
 }
 
 
-function register(req, res) {
+ async function register(req, res) {
 
   let login, name, surname, email, password, token;
+
+  let location = req.body.location ? await getUserLocation(req.body.location) :
+                                                        await getIpLocation(req.connection.remoteAddress);
 
   if(!(login = validateLogin(req.body.login)))
     return res.status(400).send({ reason: 'Invalid login!' });
@@ -55,24 +61,48 @@ function register(req, res) {
 
   token = uuid();
   hashPassword(password)
-  .then(password => registerUser(login, name, surname, email, password, token))
+  .then(password => registerUser(login, name, surname, email, password, token, location))
   .then(() => mailer.sendActivationMessage(login, email, token))
   .then(() => res.send())
-  .catch(e => res.status(500).send());
+  .catch(() => res.status(500).send());
 }
 
+const getUserLocation = async coords => new Promise((resolve) => {
+  geocoder()
+    .reverse(coords.longitude, coords.latitude)
+    .end((err, res) => {
+      if (err) return resolve(null);
+      resolve({ country: res.address.country, city: res.address.city, coords: [res.lat, res.lon] })
+    })
+});
+
+
+
+const getIpLocation = async ip => {
+
+  let location = geoip.lookup(ip === '::ffff:127.0.0.1' ? await publicIp.v4() : ip);
+  let { country, city, ll } = location;
+  return { country: country, city: city, coords: ll };
+};
+
 const validateLogin = login => (login && /^[a-z0-9]{3,20}$/i.test(login)) ? capitalize(login) : null;
+
 const validateName = name => (name && /^[a-z]{2,20}$/i.test(name)) ? capitalize(name) : null;
+
 const validateEmail = email => email ? email.toLowerCase() : null;
+
 const validatePassword = (password, passwordConfirm) => (password && password === passwordConfirm &&
   /((?=.*[a-z])(?=.*[0-9])(?=.{6,}))/i.test(password)) ? passwordConfirm : null;
+
 const capitalize = str => str.charAt(0).toUpperCase() +  str.slice(1).toLowerCase();
-const registerUser = (login, name, surname, email, password, token) => new Promise((resolve, reject) => {
-  let user = new User({ login, name, surname, email, password, token });
+
+const registerUser = (login, name, surname, email, password, token, location) => new Promise((resolve, reject) => {
+  let user = new User({ login, name, surname, email, password, token, location });
   user.save()
   .then(() => resolve())
-  .catch(() => reject())
+  .catch(e => console.log(e))
 });
+
 const hashPassword = password => new Promise((resolve, reject) => {
   bcrypt.hash(password, 10, (err, hash) => {
     if (err) return reject(err);
@@ -173,7 +203,7 @@ function refreshTokens(req, res) {
 
     User.findOne({_id: decoded.id}).exec()
     .then(user => {
-      if (!user || user.token !== token)
+      if (!user || user.token.split(' ')[1] !== token)
         return res.status(401).json({ reason: 'Invalid token'});
 
       createTokens(user)

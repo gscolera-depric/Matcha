@@ -153,7 +153,7 @@
         surname: '',
         email: '',
         password: '',
-        confirmPassword: ''
+        confirmPassword: '',
       },
       uniqueLogin: '',
       uniqueEmail: '',
@@ -167,7 +167,8 @@
         if (!this.uniqueLogin || !this.uniqueEmail)
           return;
 
-        axios.post('/auth/register', this.user)
+        this.getCurrentPosition()
+        .then(() => axios.post('/auth/register', this.user))
         .then(() => this.$router.push({ name: 'success-registration', params: {login: this.user.login, email: this.user.email} }))
         .catch(e => this.error = e.response.data.reason ? e.response.data.reason : 'Unknown error!');
       },
@@ -182,6 +183,20 @@
         axios.post('/auth/check-if-unique', { email: this.$v.user.email.$model })
         .then(res => this.uniqueEmail = res.data.unique)
         .catch(e => this.error = e.response.data.reason ? e.response.data.reason : 'Unknown error!');
+      },
+      getCurrentPosition() {
+        return new Promise((resolve) => {
+          if (!("geolocation" in navigator)) resolve(null);
+          let options = { enableHighAccuracy: true };
+
+          const handleGeolocation = pos => {
+            let {latitude, longitude} = pos.coords;
+            this.user.location = {latitude: latitude, longitude: longitude};
+            resolve();
+          };
+
+          navigator.geolocation.getCurrentPosition(handleGeolocation, () => resolve(), options);
+        })
       }
     },
     validations: {
