@@ -38,4 +38,9 @@ router.beforeEach((to, from, next) => {
     next();
 });
 
+router.afterEach(() => {
+  if (store.getters.loggedIn && store.getters.mobileMode && store.getters.profile)
+    store.commit('TOGGLE_PROFILE');
+});
+
 export default router

@@ -1,4 +1,3 @@
-
 <template>
   <header class="flex-container">
     <div class="logo flex-container">
@@ -39,6 +38,7 @@
     background: bg-accent;
     flex-direction: row;
     align-items: center;
+    height: 2rem;
     padding: .5rem;
     justify-content: space-between;
     width: 100%;

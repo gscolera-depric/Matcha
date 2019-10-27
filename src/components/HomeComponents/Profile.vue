@@ -47,14 +47,17 @@
 .profile
   background: bg-dark;
   height: 100%;
-  width: 30%;
+  width: 20rem;
   min-width: 200px;
+  position: fixed;
+  left: 0;
+  top: 2rem;
   transition: .3s;
   @media screen and (max-width: xs)
     position: fixed;
     width: 100vw;
   &.not-active
-    display: none;
+    transform: translateX(-100%);
 
 .profilePic
   color: light;
