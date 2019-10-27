@@ -6,14 +6,14 @@
       <span>the dating service</span>
     </div>
     <nav v-if="$store.getters.mobileMode" class="mobile-nav">
-      <img class="icon" src="../../assets/img/man-user.png" alt="profile" @click="test">
+      <img class="icon" src="../../assets/img/man-user.png" alt="profile" @click="$store.commit('TOGGLE_PROFILE')">
       <img class="icon" src="../../assets/img/magnifying-glass.png" alt="find">
       <img class="icon" src="../../assets/img/envelope.png" alt="messages">
       <img class="icon" src="../../assets/img/notification.png" alt="notofications">
       <img class="icon" src="../../assets/img/logout.png" alt="logout" @click="logout">
     </nav>
     <nav v-else class="desktop-nav">
-      <div>profile</div>
+      <div @click="$store.commit('TOGGLE_PROFILE')">profile</div>
       <div>search</div>
       <div>messages</div>
       <div>notifications</div>
@@ -26,9 +26,6 @@
   export default {
     name: "AppHeader",
     methods: {
-      test() {
-        console.log('test')
-      },
       logout() {
         this.$store.commit('LOGOUT');
         this.$router.push('/auth');
@@ -79,4 +76,5 @@
     left: 0;
     height: 2rem;
     width: 100%;
+    z-index: 1000;
 </style>

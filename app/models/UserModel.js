@@ -10,12 +10,16 @@ const userSchema = new mongoose.Schema({
   token: { type: String},
   activated: {type: Boolean, default: false},
   fameRating: { type: Number, default: 0 },
-  album: {type: Array },
+  album: Array,
   location: {
     country: String,
     city: String,
     coords: Array
-  }
+  },
+  tags: Array,
+  gender: String,
+  sexualPreferences: { type: String, default: 'Bisexual'},
+  biography: String
 });
 
 userSchema.statics.findByLogin = function(login) {

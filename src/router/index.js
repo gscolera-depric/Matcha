@@ -6,7 +6,11 @@ import store from '../store/index';
 Vue.use(VueRouter);
 
 const routes = [
-  { path: '/', name: 'home', component: Home, meta: { requiresAuth: true } },
+  { path: '/', alias: '/home', component: Home, meta: { requiresAuth: true }, children: [
+      { path: '', component: () => import('../components/HomeComponents/AppSearch') },
+      { path: 'edit-profile', component: () => import('../components/HomeComponents/EditProfile') },
+    ]
+  },
   { path: '/auth', component: () => import('../views/Auth.vue'), meta: { requiresGuest: true }, children: [
       { path: '', component: () => import('../components/AuthComponents/Home') },
       { path: 'login', component: () => import('../components/AuthComponents/Login') },
@@ -15,7 +19,8 @@ const routes = [
       { path: 'password-reset', component: () => import('../components/AuthComponents/PasswordReset') },
       { path: 'success-registration', name: 'success-registration', component: () => import('../components/AuthComponents/SuccessRegistration'), props: true },
       { path: 'account-activation/:login/:token', component: () => import('../components/AuthComponents/AccountActivation') }
-    ]}
+    ]
+  }
 ];
 
 const router = new VueRouter({

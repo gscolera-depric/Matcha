@@ -8,15 +8,18 @@ Vue.use(Vuex);
 export default new Vuex.Store({
   state: {
     loading: true,
-    mobileMode: window.innerWidth < 600
+    mobileMode: window.innerWidth < 600,
+    profile: window.innerWidth > 600
   },
   getters: {
     isLoading: state => state.loading,
-    mobileMode: state => state.mobileMode
+    mobileMode: state => state.mobileMode,
+    profile: state => state.profile
   },
   mutations: {
     SHOW_PRELOADER: state => state.loading = true,
     HIDE_PRELOADER: state => state.loading = false,
+    TOGGLE_PROFILE: state => state.profile = !state.profile,
     HANDLE_RESIZE: state => state.mobileMode = window.innerWidth < 768
   },
   actions: {
